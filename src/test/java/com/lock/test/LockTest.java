@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import com.amirsh71.methodlock.core.LockCacheService;
+import com.amirsh71.methodlock.core.OperationLockedException;
 import com.amirsh71.methodlock.core.inmemory.LockCacheInMemoryServiceImpl;
 import com.lock.test.LockService.Request;
 import com.lock.test.LockTest.LockTestConfig;
@@ -36,16 +37,28 @@ public class LockTest
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
         CompletableFuture<Void> runAsync = CompletableFuture.runAsync(()->{
             System.out.println("thread 1");
-            sleep(6);
             lockService.test(new Request("user1", "food1"));
             lockService.test(new Request("user2", "food2"));
         });
         CompletableFuture<Void> runAsync2 = CompletableFuture.runAsync(()->{
             System.out.println("thread 2");
-            sleep(6);
             lockService.test(new Request("user3", "food3"));
         });
         CompletableFuture.allOf(runAsync, runAsync2).join();
+    }
+    
+    @Test(expected=OperationLockedException.class)
+//    @Ignore
+    public void testTimeoutLock() throws IOException   
+    {
+        Assert.notNull(lockService);
+        try
+        {
+            lockService.testTimout(new Request("u1", "f1"));
+        }
+        catch (OperationLockedException e) {
+            throw e;
+        }
     }
     
     public void sleep(long timeout)
@@ -60,31 +73,7 @@ public class LockTest
         }
     }
     
-    @Test
-    @Ignore
-    public void testLockTimeout() throws IOException   
-    {
-        Assert.notNull(lockService);
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
-        CompletableFuture.runAsync(()->{
-            try
-            {
-                TimeUnit.SECONDS.sleep(6);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-
-            System.out.println("thread 1");
-            lockService.test(new Request("user1", "food1"));
-        });
-        CompletableFuture.runAsync(()->{
-            System.out.println("thread 2");
-            lockService.test(new Request("user2", "food2"));
-        });
-    }
-
+   
     @ComponentScan(basePackages = "com.amirsh71.methodlock.core")
     @Configuration
     @EnableAspectJAutoProxy

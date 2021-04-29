@@ -20,7 +20,7 @@ public class LockService
     }
     
     @Lock(timeoutSec=4, type="ORDER_FOOD")
-    public void test(Request r)
+    public void testTimout(Request r)
     {
         try
         {
@@ -28,9 +28,15 @@ public class LockService
         }
         catch (InterruptedException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
+        System.out.println("test lock");
+        System.out.println("user id " + r.userId);
+        System.out.println(Thread.currentThread().getName());
+    }
+    
+    @Lock(timeoutSec=4, type="ORDER")
+    public void test(Request r)
+    {
         System.out.println("test lock");
         System.out.println("user id " + r.userId);
         System.out.println(Thread.currentThread().getName());
