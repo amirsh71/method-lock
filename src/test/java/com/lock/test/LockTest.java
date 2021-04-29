@@ -8,13 +8,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import com.amirsh71.methodlock.core.LockCacheService;
 import com.amirsh71.methodlock.core.inmemory.LockCacheInMemoryServiceImpl;
-import com.amirsh71.methodlock.core.inmemory.ReentrantLockImpl;
 import com.lock.test.LockService.Request;
 import com.lock.test.LockTest.LockTestConfig;
 
@@ -83,6 +84,8 @@ public class LockTest
         });
     }
 
+    @ComponentScan(basePackages = "com.amirsh71.methodlock.core")
+    @Configuration
     public static class LockTestConfig
     {
         @Bean
