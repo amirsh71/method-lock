@@ -19,12 +19,12 @@ public class LockService
         
     }
     
-    @Lock(timeoutSec=5, type="ORDER_FOOD")
+    @Lock(timeoutSec=4, type="ORDER_FOOD")
     public void test(Request r)
     {
         try
         {
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(6);
         }
         catch (InterruptedException e)
         {

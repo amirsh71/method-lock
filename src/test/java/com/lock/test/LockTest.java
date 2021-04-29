@@ -14,6 +14,7 @@ import org.springframework.util.Assert;
 
 import com.amirsh71.methodlock.core.LockCacheService;
 import com.amirsh71.methodlock.core.inmemory.LockCacheInMemoryServiceImpl;
+import com.amirsh71.methodlock.core.inmemory.ReentrantLockImpl;
 import com.lock.test.LockService.Request;
 import com.lock.test.LockTest.LockTestConfig;
 
@@ -33,16 +34,29 @@ public class LockTest
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
         CompletableFuture<Void> runAsync = CompletableFuture.runAsync(()->{
             System.out.println("thread 1");
+            sleep(6);
             lockService.test(new Request("user1", "food1"));
             lockService.test(new Request("user2", "food2"));
         });
         CompletableFuture<Void> runAsync2 = CompletableFuture.runAsync(()->{
             System.out.println("thread 2");
+            sleep(6);
             lockService.test(new Request("user3", "food3"));
         });
         CompletableFuture.allOf(runAsync, runAsync2).join();
     }
     
+    public void sleep(long timeout)
+    {
+        try
+        {
+            TimeUnit.SECONDS.sleep(timeout);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
     
     @Test
     @Ignore
@@ -75,6 +89,7 @@ public class LockTest
         public LockCacheService lockCacheService()
         {
             return new LockCacheInMemoryServiceImpl();
+//            return new ReentrantLockImpl();
         }
 
         @Bean
