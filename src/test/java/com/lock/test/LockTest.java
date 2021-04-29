@@ -31,15 +31,16 @@ public class LockTest
     {
         Assert.notNull(lockService);
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
-        CompletableFuture.runAsync(()->{
+        CompletableFuture<Void> runAsync = CompletableFuture.runAsync(()->{
             System.out.println("thread 1");
             lockService.test(new Request("user1", "food1"));
 //            lockService.test(new Request("user2", "food2"));
         });
-        CompletableFuture.runAsync(()->{
+        CompletableFuture<Void> runAsync2 = CompletableFuture.runAsync(()->{
             System.out.println("thread 2");
             lockService.test(new Request("user2", "food2"));
         });
+        CompletableFuture.allOf(runAsync, runAsync2).join();
     }
     
     
