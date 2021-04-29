@@ -1,6 +1,7 @@
 package com.lock.test;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,31 @@ public class LockTest
         Assert.notNull(lockService);
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
         CompletableFuture.runAsync(()->{
+            System.out.println("thread 1");
+            lockService.test(new Request("user1", "food1"));
+        });
+        CompletableFuture.runAsync(()->{
+            System.out.println("thread 2");
+            lockService.test(new Request("user2", "food2"));
+        });
+    }
+    
+    
+    @Test
+    public void testLockTimeout() throws IOException   
+    {
+        Assert.notNull(lockService);
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@");
+        CompletableFuture.runAsync(()->{
+            try
+            {
+                TimeUnit.SECONDS.sleep(6);
+            }
+            catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+
             System.out.println("thread 1");
             lockService.test(new Request("user1", "food1"));
         });
