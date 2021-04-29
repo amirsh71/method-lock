@@ -34,11 +34,11 @@ public class LockTest
         CompletableFuture<Void> runAsync = CompletableFuture.runAsync(()->{
             System.out.println("thread 1");
             lockService.test(new Request("user1", "food1"));
-//            lockService.test(new Request("user2", "food2"));
+            lockService.test(new Request("user2", "food2"));
         });
         CompletableFuture<Void> runAsync2 = CompletableFuture.runAsync(()->{
             System.out.println("thread 2");
-            lockService.test(new Request("user2", "food2"));
+            lockService.test(new Request("user3", "food3"));
         });
         CompletableFuture.allOf(runAsync, runAsync2).join();
     }
