@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class LockTest
         CompletableFuture.runAsync(()->{
             System.out.println("thread 1");
             lockService.test(new Request("user1", "food1"));
+//            lockService.test(new Request("user2", "food2"));
         });
         CompletableFuture.runAsync(()->{
             System.out.println("thread 2");
@@ -42,6 +44,7 @@ public class LockTest
     
     
     @Test
+    @Ignore
     public void testLockTimeout() throws IOException   
     {
         Assert.notNull(lockService);
